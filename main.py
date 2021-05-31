@@ -30,8 +30,8 @@ def compair_dif(genes, markers):
     for i in range(len(markers)):
         for j in range(i + 1, len(markers)):
             # print("dif: ", genes[i], genes[j])
-            sub_list = [genes[i], genes[j]]
-            sub_list.append(calculate_dif(markers[i], markers[j]))
+            sub_list = [genes[i], genes[j],
+                        calculate_dif(markers[i], markers[j])]
             rf_list.append(sub_list)
     # print(rf_list)
     order_genes(rf_list)
@@ -93,6 +93,7 @@ def order_genes(rf_list):
         order_list.append([gen_name_lowest, lowest])
     # print(placed)
     print(order_list)
+    make_file(order_list)
 
 
 def calculate_dif(marker_a, marker_b):
@@ -110,8 +111,10 @@ def calculate_dif(marker_a, marker_b):
     return rf
 
 
-# def make_file():
-#     file = open("MapChart_file.txt", "w+")
+def make_file(order_list):
+    file = open("MapChart_file.txt", "w+")
+    for sub_list in order_list:
+        file.write(sub_list[0] + "\t" + str(sub_list[1])+"\n")
 
 
 def main():
