@@ -49,28 +49,6 @@ def order_genes(rf_list):
     print(higest_rf, gen_name_one, gen_name_two)
     order_list.append([gen_name_one, 0])
 
-    # placed = [gen_name_one]
-    # for i in range(19):
-    #
-    #     lowest = 0
-    #     gen_name_lowest = ""
-    #     for sub_list in rf_list:
-    #         if sub_list[0] == placed[-1] or sub_list[1] == placed[-1]:
-    #             if lowest == 0 or lowest > sub_list[2]:
-    #                 if sub_list[0] not in placed[0:-1] and sub_list[1] \
-    #                         not in placed[0:-1]:
-    #                     lowest = sub_list[2]
-    #                     if sub_list[0] == placed[-1]:
-    #                         gen_name_lowest = sub_list[1]
-    #                     else:
-    #                         gen_name_lowest = sub_list[0]
-    #
-    #         # print(sub_list)
-    #     placed.append(gen_name_lowest)
-    #     order_list.append([gen_name_lowest, lowest])
-    # # print(placed)
-    # print(order_list)
-
     placed = []
     for i in range(19):
 
