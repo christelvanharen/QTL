@@ -1,7 +1,15 @@
-from scipy.stats import chisquare
+# QTL project course 8, assignment 1
+# By Jasper Versantvoort & Christel van Haren
+# June 4th, 2021
 
 
 def markers_finder(file):
+    """
+    The marker subset file is being read. And the genes and markers
+    will be separated in 2 lists.
+    :param file: The marker subset file
+    :return: The genes and the markers from the file in lists.
+    """
     i = 1
     genes = []  # gen1, gen2
     markers = []  # aaabbbaaa, aabbbaaa
@@ -15,29 +23,33 @@ def markers_finder(file):
     return genes, markers
 
 
-def chisq_test(genes, markers):
-    for marker in markers:
-        length = len(marker)
-        count_a = marker.count("a")
-        count_b = marker.count("b")
-        print(genes[markers.index(marker)], length, count_a, count_b)
-        chis = chisquare([count_a, count_b])
-        print(chis)
-
-
 def compair_dif(genes, markers):
+    """
+    Comparing the differences from the markers with the genes.
+    :param genes: The gene names including the markers.
+    :param markers: The markers of the genes.
+    :return: A list comparing 2 genes each time with each other with
+    the differences between the markers.
+    """
     rf_list = []
     for i in range(len(markers)):
         for j in range(i + 1, len(markers)):
-            # print("dif: ", genes[i], genes[j])
             sub_list = [genes[i], genes[j],
                         calculate_dif(markers[i], markers[j])]
             rf_list.append(sub_list)
-    # print(rf_list)
     order_genes(rf_list)
 
 
 def order_genes(rf_list):
+    """
+    The genes are ordered here. It takes the lowest and the highest
+    rf there is and then it works its way from outside to the inside.
+    :param rf_list: A list comparing 2 genes each time with each
+    other with the differences between the markers.
+    :return: order_list; A list comparing 2 genes each time with each
+    other with the differences between the markers on the right
+    order. From low to high.
+    """
     order_list = []
     higest_rf = 0
     for sub_list in rf_list:
@@ -55,8 +67,6 @@ def order_genes(rf_list):
         lowest = 0
         gen_name_lowest = ""
         for sub_list in rf_list:
-            # if (sub_list[0] == gen_name_one or sub_list[1] == gen_name_one) and \
-            #         sub_list[2] < 30:
             if sub_list[0] == gen_name_one or sub_list[1] == gen_name_one:
                 if lowest == 0 or lowest > sub_list[2]:
                     if sub_list[0] not in placed and sub_list[1] not in placed:
@@ -69,12 +79,21 @@ def order_genes(rf_list):
             print(sub_list)
         placed.append(gen_name_lowest)
         order_list.append([gen_name_lowest, lowest])
-    # print(placed)
+
     print(order_list)
     make_file(order_list)
 
 
 def calculate_dif(marker_a, marker_b):
+    """
+    Checking if there is a difference or a similarity between the
+    positions. The positions can only contain an a or a b.
+    :param marker_a: Checking if marker_a shows similarity between
+    marker_a and marker_b
+    :param marker_b: Checking if marker_b shows a difference between
+    marker_a and marker_b
+    :return: rf; the difference between the 2 genes.
+    """
     difference = 0
     stripes = 0
     for i in range(len(marker_a)):
@@ -90,6 +109,12 @@ def calculate_dif(marker_a, marker_b):
 
 
 def make_file(order_list):
+    """
+    Making a file for MapChart, with the genes and the distances.
+    :param order_list: The list with the genes and distances in the
+    correct order.
+    :return: The txt file for MapChart.
+    """
     file = open("MapChart_file.txt", "w+")
     for sub_list in order_list:
         file.write(sub_list[0] + "\t" + str(sub_list[1])+"\n")
@@ -98,7 +123,6 @@ def make_file(order_list):
 def main():
     file = open("CvixLer-MarkerSubset-LG1.txt")
     genes, markers = markers_finder(file)
-    # chisq_test(genes, markers)
     compair_dif(genes, markers)
 
 
