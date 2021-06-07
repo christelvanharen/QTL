@@ -2,6 +2,8 @@
 # By Jasper Versantvoort & Christel van Haren
 # June 4th, 2021
 
+from scipy.stats import chisquare
+
 
 def markers_finder(file):
     """
@@ -12,7 +14,7 @@ def markers_finder(file):
     """
     i = 1
     genes = []  # gen1, gen2
-    markers = []  # aaabbbaaa, aabbbaaa
+    markers = []  # aaabbbaaa, aabbbaaab
     for regel in file:
         if ("; " + str(i)) in regel:
             gen = regel.split(" ")[0]
@@ -21,6 +23,23 @@ def markers_finder(file):
             markers.append(marker)
             i += 1
     return genes, markers
+
+
+def chisq_test(genes, markers):
+
+    """
+    Comparing the differences from the markers with the genes.
+    :param genes: The gene names including the markers.
+    :param markers: The markers of the genes.
+    :return: The chisquare values of all te gene and markers.
+    """
+    for marker in markers:
+        length = len(marker)
+        count_a = marker.count("a")
+        count_b = marker.count("b")
+        print(genes[markers.index(marker)], length, count_a, count_b)
+        chis = chisquare([count_a, count_b])
+        print(chis)
 
 
 def compair_dif(genes, markers):
@@ -66,6 +85,7 @@ def order_genes(rf_list):
 
         lowest = 0
         gen_name_lowest = ""
+        distance = []
         for sub_list in rf_list:
             if sub_list[0] == gen_name_one or sub_list[1] == gen_name_one:
                 if lowest == 0 or lowest > sub_list[2]:
@@ -77,10 +97,12 @@ def order_genes(rf_list):
                             gen_name_lowest = sub_list[0]
 
             print(sub_list)
+            distance.append(sub_list)
         placed.append(gen_name_lowest)
         order_list.append([gen_name_lowest, lowest])
 
     print(order_list)
+    make_file_ordering(distance)
     make_file(order_list)
 
 
@@ -117,7 +139,14 @@ def make_file(order_list):
     """
     file = open("MapChart_file.txt", "w+")
     for sub_list in order_list:
-        file.write(sub_list[0] + "\t" + str(sub_list[1])+"\n")
+        file.write(sub_list[0] + "\t" + str(sub_list[1]) + "\n")
+
+
+def make_file_ordering(dis):
+    file = open("Distance_file.txt", "w+")
+    for sub_list in dis:
+        file.write(sub_list[0] + "\t" + str(sub_list[1]) + "\t" +
+                   str(sub_list[2]) + "\n")
 
 
 def main():
